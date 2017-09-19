@@ -1,6 +1,7 @@
 import urllib.request
 from data.spider_tool.proxy import *
 from bs4 import BeautifulSoup
+from data.spider_tool.mongo_db import *
 
 headers={
 	"Connection":"close",
@@ -8,10 +9,10 @@ headers={
     "Cookie":"u=721493343230860; s=fq124vw7g9; webp=0; aliyungf_tc=AQAAAAGV+zc0dQQAGq85cQVvSoYsqrE4; xq_a_token=afe4be3cb5bef00f249343e7c6ad8ac7dc0e17fb; xq_a_token.sig=6QeqeLxu5hi1S21JgtozJ1EZcsQ; xq_r_token=a1e0ac0c42513dcf339ddf01778b49054e341172; xq_r_token.sig=VPMAft0BfpDHm5UE0QJ5oDLYunw; __utmt=1; __utma=1.1379458042.1493343321.1493778350.1493783528.5; __utmb=1.3.10.1493783528; __utmc=1; __utmz=1.1493343321.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); Hm_lvt_1db88642e346389874251b5a1eded6e3=1493369217,1493688491,1493778343,1493779071; Hm_lpvt_1db88642e346389874251b5a1eded6e3=1493784158"
 }
 
-url = 'http://www.ssports.com/data/rankMatch_1.html'
+#比赛轮数
+turn_num = "1"
 
-# response = urllib.request.urlopen('http://search.cs.com.cn/search?searchword=%E6%AF%94%E7%89%B9%E5%B8%81&channelid=215308')
-# html = response.read()
+url = 'http://www.ssports.com/data/rankMatch_'+turn_num+'.html'
 
 req = urllib.request.Request(url,headers=headers)
 html = urllib.request.urlopen(req).read().decode('utf-8')
@@ -20,37 +21,36 @@ soup = BeautifulSoup(html, "html.parser")
 
 tr_data = soup.find_all("tr")
 
+#本轮结果集合
+turn_result = []
+
 for index in range(len(tr_data)):
-    print("++++++++++++++++++")
+    #比赛结果
+    match_result = {}
     tr_html = BeautifulSoup(str(tr_data[index]), "html.parser")
     td_data = tr_html.find_all("td")
-    print(td_data[1].get_text())
-    print(td_data[2].get_text())
+    match_date = td_data[1].get_text()
+    match_result["match_date"]=match_date
+
+    match_main = td_data[2].get_text()
+    match_result["match_main"] = match_main
 
     score = td_data[3].get_text()
     score_arr = score.strip().split(":")
-    print(score_arr[0].strip()+":"+score_arr[1].strip())
-    print(td_data[4].get_text())
-    print("------------------")
+    match_main_score = score_arr[0].strip()
+    match_cust_score = score_arr[1].strip()
+    match_result["match_main_score"] = match_main_score
+    match_result["match_cust_score"] = match_cust_score
 
+    match_cust = td_data[4].get_text()
+    match_result["match_cust"] = match_cust
 
+    match_result["turn_num"] = turn_num
 
+    turn_result.append(match_result)
 
+#用集合批量插入MONGODB，结果为单条插入
+get_mondb().match_result.insert_many(turn_result)
+for i in get_mondb().match_result.find({"turn_num": turn_num}):
+    print(i)
 
-
-
-
-
-
-# news_array = soup.find_all(style="line-height:160%;width:100%;")
-#
-#
-# for index in range(len(news_array)):
-#     news_table = BeautifulSoup(str(news_array[index]), "html.parser")
-#
-#     #print(news_table.td)
-#
-#     if(news_table.a != None):
-#         print("地址:  " + news_table.a['href'])
-#         print("标题:  " + news_table.a.get_text())
-#         print("+++++++++++++++++++")
