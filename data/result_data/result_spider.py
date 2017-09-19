@@ -24,15 +24,13 @@ for index in range(len(tr_data)):
     print("++++++++++++++++++")
     tr_html = BeautifulSoup(str(tr_data[index]), "html.parser")
     td_data = tr_html.find_all("td")
-    # print(td_data[1].get_text())
-    # print(td_data[2].get_text())
+    print(td_data[1].get_text())
+    print(td_data[2].get_text())
 
     score = td_data[3].get_text()
     score_arr = score.strip().split(":")
     print(score_arr[0].strip()+":"+score_arr[1].strip())
-
-
-    # print(td_data[4].get_text())
+    print(td_data[4].get_text())
     print("------------------")
 
 
