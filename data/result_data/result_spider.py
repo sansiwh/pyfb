@@ -3,8 +3,9 @@ from data.spider_tool.proxy import *
 from bs4 import BeautifulSoup
 from data.spider_tool.mongo_db import *
 
+#插入每轮比赛结果
 #比赛轮数
-turn_num = "1"
+turn_num = "5"
 
 def get_soup():
     headers = {
@@ -47,7 +48,7 @@ def get_result_list():
         match_result["turn_num"] = turn_num
 
         turn_result.append(match_result)
-        return turn_result
+    return turn_result
 
 def insert_mongodb(list):
     #用集合批量插入MONGODB，结果为单条插入
@@ -56,8 +57,15 @@ def insert_mongodb(list):
 
 if __name__ == '__main__':
     turn_result = get_result_list()
-    # print(turn_result)
+
+    #print(turn_result)
     #get_mondb().match_result.remove()
-    insert_mongodb(turn_result)
-    for i in get_mondb().match_result.find({"turn_num": turn_num}):
+
+
+    #insert_mongodb(turn_result)
+    for i in get_mondb().match_result.find():#{"turn_num": turn_num}
         print(i)
+
+    # res_list = get_mondb().match_result.find({"$or": [{"match_main": "阿森纳"}, {"match_cust": "阿森纳"}]})
+    # for i in res_list:
+    #     print(i)
