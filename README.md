@@ -1,2 +1,3 @@
 # pyfb
-get match result
+获取比赛信息
+获取赔率信息
