@@ -1,6 +1,7 @@
 #从数据库查询数据
 from data.spider_tool.mongo_db import *
 
+#获取两队本赛季战绩
 def find_result_by_name(name1,name2):
     res_list = get_mondb().match_result.find({"$or": [{"match_main": name1}, {"match_cust": name1}]})
     res_list2 = get_mondb().match_result.find({"$or": [{"match_main": name2}, {"match_cust": name2}]})
@@ -18,4 +19,4 @@ def find_result_by_name(name1,name2):
 
 
 if __name__ == '__main__':
-    find_result_by_name("哈德斯","热刺")
+    find_result_by_name("切尔西","曼城")
