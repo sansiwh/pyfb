@@ -5,7 +5,7 @@ from data.spider_tool.mongo_db import *
 
 #插入每轮比赛结果
 #比赛轮数
-turn_num = "5"
+turn_num = "6"
 
 def get_soup():
     headers = {
@@ -62,7 +62,7 @@ if __name__ == '__main__':
     #get_mondb().match_result.remove()
 
 
-    #insert_mongodb(turn_result)
+    insert_mongodb(turn_result)
     for i in get_mondb().match_result.find():#{"turn_num": turn_num}
         print(i)
 
