@@ -18,4 +18,4 @@ def find_result_by_name(name1,name2):
 
 
 if __name__ == '__main__':
-    find_result_by_name("哈德斯","利物浦")
+    find_result_by_name("哈德斯","热刺")

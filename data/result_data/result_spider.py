@@ -58,11 +58,11 @@ def insert_mongodb(list):
 if __name__ == '__main__':
     turn_result = get_result_list()
 
-    #print(turn_result)
+    print(turn_result)
     #get_mondb().match_result.remove()
 
 
-    insert_mongodb(turn_result)
+    #insert_mongodb(turn_result)
     for i in get_mondb().match_result.find():#{"turn_num": turn_num}
         print(i)
 
