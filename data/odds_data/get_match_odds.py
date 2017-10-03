@@ -8,6 +8,7 @@
 
 from data.spider_tool.common_tool import *
 import re
+from data.spider_tool.mongo_db import *
 
 headers = {
         "Host": "www.bet365.com",
@@ -18,27 +19,47 @@ headers = {
     }
 
 #获取周末英超联赛比赛列表   从列表中获取比赛参数
+#获取列表后按照时间  key:20170707 value:list
 def get_match_list():
     url = "https://www.bet365.com/SportsBook.API/web?lid=10&zid=0&pd=%23AC%23B1%23C1%23D14%23E33577329%23F2%23R1%23&cid=42&ctid=42"
     soup = get_soup(headers, url);
-    re_list = re.findall(r"PD=(.+?);FF=;",str(soup))
-    match_ids = []
-    for i in re_list:
-        match_id = re.findall(r"#D8#(.+?)#F3", i)
-        if(len(match_id) > 0):
-            match_ids.append(match_id[0])
-    print(set(match_ids))
 
+    re_list = re.findall(r";BC(.+?)#R1#P", str(soup))
+    match_odd_time_list = []
+    for i in re_list:
+        match_odd_time = {}
+        match_time = re.findall(r"=(.+?);PD", i)
+        match_id = re.findall(r"#D8#(.+?)#F3", i)
+        match_odd_time["match_id"] = match_id[0]
+        match_odd_time["match_time"] = match_time[0]
+        match_odd_time_list.append(match_odd_time)
+    return match_odd_time_list;
+
+#数据插入赔率表
+def insert_odd_data(list):
+    get_mondb().match_odd_data.insert_many(list)
 
 #获取每场比赛的赔率数据
-def get_match_odds_soup():
-    v1 = "E67036630"
-    v2 = "R1"
-
-    url = "https://www.bet365.com/SportsBook.API/web?lid=10&zid=0&pd=%23AC%23B1%23C1%23D8%23"+v1+"%23F3%23"+v2+"%23P%5E14%23Q%5E938%23&cid=42&ctid=42"
+def get_match_odds_soup(url_id):
+    url = "https://www.bet365.com/SportsBook.API/web?lid=10&zid=0&pd=%23AC%23B1%23C1%23D8%23"+url_id+"%23F3%23R1%23P%5E14%23Q%5E33577329%23&cid=42&ctid=42"
     soup = get_soup(headers,url);
-    print(soup)
+    return soup
+
+#查询大于某一时间的所有比赛
+def get_match_odds_from_db(time):
+    collection = get_mondb().match_odd_data
+    list = collection.find({"match_time":{"$gte": time}})
+    return list
 
 if __name__ == '__main__':
-    #get_match_odds_soup();
-    get_match_list()
+    #查询并插入比赛列表
+    #match_odd_time_list = get_match_list()
+    #print(match_odd_time_list)
+    #insert_odd_data(match_odd_time_list)
+
+    list = get_match_odds_from_db('20171014123000');
+    print(list[0]['match_id'])
+    print(get_match_odds_soup(list[0]['match_id']))
+    # for i in list:
+    #     print(i['match_id'])
+    #     print(i['match_time'])

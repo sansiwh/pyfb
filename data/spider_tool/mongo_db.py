@@ -36,5 +36,9 @@ if __name__ == '__main__':
     #删除
     #get_db_op().remove()
     #get_db_op().remove({"text": "ccc"})
+
+    #查询所有
+    #get_mondb().match_result.find()  循环结果  for in
+
     for i in get_mondb().match_result.find({"author": "chen"}):
         print(i)

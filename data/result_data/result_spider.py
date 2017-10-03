@@ -5,7 +5,7 @@ from data.spider_tool.mongo_db import *
 
 #插入每轮比赛结果
 #比赛轮数
-turn_num = "6"
+turn_num = "7"
 
 def get_soup():
     headers = {
@@ -63,8 +63,8 @@ if __name__ == '__main__':
 
 
     #insert_mongodb(turn_result)
-    for i in get_mondb().match_result.find():#{"turn_num": turn_num}
-        print(i)
+    # for i in get_mondb().match_result.find():#{"turn_num": turn_num}
+    #     print(i)
 
     # res_list = get_mondb().match_result.find({"$or": [{"match_main": "阿森纳"}, {"match_cust": "阿森纳"}]})
     # for i in res_list:
