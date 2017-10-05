@@ -1,1 +1,3 @@
 /.idea
+/data/spider_tool/common_tool.py
+/data/spider_tool/mongo_db.py

@@ -24,7 +24,13 @@ def get_soup(headers,url):
     urllib.request.install_opener(opener)
 
     req = urllib.request.Request(url, headers=headers)
-    html = urllib.request.urlopen(req).read().decode('utf-8')
+
+    response = urllib.request.urlopen(req)
+    buff = response.read()
+    html = buff.decode('utf-8')
+
+    response.close()
+    #html = urllib.request.urlopen(req).read().decode('utf-8')
     soup = BeautifulSoup(html, "html.parser")
     return soup
 

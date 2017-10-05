@@ -9,10 +9,11 @@
 from data.spider_tool.common_tool import *
 import re
 from data.spider_tool.mongo_db import *
+import time
 
 headers = {
         "Host": "www.bet365.com",
-        "Connection": "keep-alive",
+        "Connection": "close",
         "Referer": "https://www.bet365.com/",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36",
         "Cookie": "aaat=am=0&at=00000000-0000-0000-0000-000000000000&ts=28-09-2017 02:45:06&v=2; bs=bt=1&mo=0; aps03=tzi=27&cg=1&ltwo=False&ao=1&cst=114&v=1&hd=Y&lng=10&cf=E&ct=42&oty=2&bst=1; rmbs=3; usdi=uqid=33465139%2DD6AC%2D4A63%2DA81B%2DFCBC35377EF2; pstk=2D41156E9D1B5D91A76654AB2763B18F000003; session=processform=0&id=%7BFAE7576E%2D1249%2D43AF%2DB4FE%2DFAD092784B92%7D&lgs=1&p=0&fms=1"
@@ -51,6 +52,32 @@ def get_match_odds_from_db(time):
     list = collection.find({"match_time":{"$gte": time}})
     return list
 
+#根据参数传递的列表，插入所有比赛的赔率数据
+#解析赔率数据
+def get_odds_data(list):
+    list_array = []
+    for i in list:
+        list_array.append(i["match_id"])
+    for i in range(len(list_array)):
+        soup = get_match_odds_soup(list_array[i])
+        time.sleep(3)
+        print(soup)
+    # match_odd_data_infos = []
+    # for i in range(len(list_array)):
+    #     soup = get_match_odds_soup(list_array[i])
+    #     match_odd_data_info = {}
+    #     match_odd_data_info["match_id"] = list_array[i]
+    #
+    #     final_result = re.findall(r"NA=全场赛果(.+?)NA=双胜彩", str(soup))
+    #     match_odd_data_info["final_result"] = final_result
+    #
+    #     right_score = re.findall(r"NA=正确得分(.+?)NA=半/全场", str(soup))
+    #     match_odd_data_info["right_score"] = right_score
+    #     match_odd_data_infos.append(match_odd_data_info)
+    #
+    # for i in match_odd_data_infos:
+    #     print(i)
+
 if __name__ == '__main__':
     #查询并插入比赛列表
     #match_odd_time_list = get_match_list()
@@ -58,8 +85,6 @@ if __name__ == '__main__':
     #insert_odd_data(match_odd_time_list)
 
     list = get_match_odds_from_db('20171014123000');
-    print(list[0]['match_id'])
-    print(get_match_odds_soup(list[0]['match_id']))
-    # for i in list:
-    #     print(i['match_id'])
-    #     print(i['match_time'])
+    for i in list:
+        print(i)
+    get_odds_data(list)
