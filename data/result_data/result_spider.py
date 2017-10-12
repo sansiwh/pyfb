@@ -5,7 +5,7 @@ from data.spider_tool.mongo_db import *
 
 #插入每轮比赛结果
 #比赛轮数
-turn_num = "7"
+turn_num = "2"
 
 def get_soup():
     headers = {
