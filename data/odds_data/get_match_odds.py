@@ -103,10 +103,11 @@ if __name__ == '__main__':
     # print(match_odd_time_list)
     # insert_odd_data(match_odd_time_list)
 
-    #天假赔率信息
+    #添加赔率信息
     # list = get_match_odds_from_db('20171014123000');
     # print(list.count())
-    # get_odds_data(list[20]["match_id"])
+    # get_odds_data(list[19]["match_id"])
 
+    print("---------")
     for i in get_all_odds_info():
         print(i)
