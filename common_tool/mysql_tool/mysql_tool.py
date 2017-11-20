@@ -1,5 +1,6 @@
 import pymysql
 from common_tool.mysql_tool.data_source import *
+import snowflake.client
 
 name_gid = {}
 cur = get_db_cur()
@@ -12,8 +13,6 @@ try:
         name_gid[row[1]]=row[0]
 except Exception as e:
     raise e
-finally:
-    db.close()  #关闭连接
 
 #缓存球队信息
 def get_team_info_by_name(name):
@@ -26,9 +25,15 @@ def insert(sql):
     except Exception as e:
         db.rollback()
         raise e
-    finally:
-        db.close()
 
+def close_db():
+    db.close()
 
 if __name__ == '__main__':
-    print(get_team_info_by_name("曼联"))
+    print(get_team_info_by_name("莱斯特城"))
+    snowflake.client.setup("localhost", 30001)
+    gid = snowflake.client.get_guid()
+
+    #sql = "insert into match_info(gid,main_team_gid,custom_team_gid,league_team_gid,match_date,match_week,match_time,turn) values(4030163061145862145,375434198808264704,375434474885742592,375414018631794688,2017-08-12,星期六,4:3,1)"
+    sql = "insert into match_info(gid,main_team_gid,custom_team_gid,league_gid,match_date,match_week,match_time,turn) values(4030173254533513217,375434198808264704,375434474885742592,375414018631794688,'2017-08-12','星期六','4:3',1)"
+    insert(sql)
