@@ -67,7 +67,7 @@ def loop_data(elements,index):
         print("赔率抓取完成")
         browser.close()
 
-#獲取賠率信息
+#获取賠率信息并保存
 def get_odd_info(html):
     soup = BeautifulSoup(open("mainpage.html",'rb'), "html.parser")
     print(soup)
