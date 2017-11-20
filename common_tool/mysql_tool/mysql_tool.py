@@ -26,6 +26,16 @@ def insert(sql):
         db.rollback()
         raise e
 
+#根据主客队时间查询match_id
+#{'away_team_name': '斯托克城', 'home_team_name': '布莱顿', 'match_date': '2017-11-21'}
+def get_match_id_by_name(param):
+    home_team_name = param["home_team_name"]
+    away_team_name = param["away_team_name"]
+    match_date = param["match_date"]
+    sql = "select * from match_info where "
+    cur.execute(sql)
+    results = cur.fetchall()
+
 def close_db():
     db.close()
 
