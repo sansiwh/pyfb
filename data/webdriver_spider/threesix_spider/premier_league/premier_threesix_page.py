@@ -12,6 +12,7 @@ from data.spider_tool.proxy import *
 from selenium.webdriver.common.proxy import Proxy
 import datetime
 from common_tool.mysql_tool.mysql_tool import *
+import traceback
 
 browser = webdriver.Chrome()
 #进入列表页
@@ -48,7 +49,8 @@ def match_list_html():
         elements = browser.find_elements_by_css_selector('.sl-CouponFixtureLinkParticipant ')
         loop_data(elements,0)
 
-    except:
+    except :
+        traceback.print_exc()
         print("页面异常，请检查网页是否可以正常打开")
         browser.close()
 
@@ -61,7 +63,7 @@ def loop_data(elements,index):
         #点击全部比分
         element = browser.find_elements("css selector", ".gl-MarketGroup_BBarItem ")
         element[1].click()
-        print(browser.page_source)
+        get_odd_info(browser.page_source)
 
         element = browser.find_element("css selector", ".cl-BreadcrumbTrail_BackButton ")
         element.click()
@@ -70,12 +72,14 @@ def loop_data(elements,index):
         elements = browser.find_elements_by_css_selector('.sl-CouponFixtureLinkParticipant ')
         loop_data(elements,index + 3)
     except:
+        traceback.print_exc()
         print("赔率抓取完成")
         browser.close()
 
 #获取賠率信息并保存
-def get_odd_info():
-    soup = BeautifulSoup(open("mainpage.html",'rb'), "html.parser")
+def get_odd_info(html):
+    #soup = BeautifulSoup(open("mainpage.html",'rb'), "html.parser")
+    soup = BeautifulSoup(html, "html.parser")
     match_date = soup.find(class_="cm-MarketGroupExtraData_TimeStamp ").get_text()
     three_odd_list = soup.find(class_="gl-MarketGroupContainer ").find_all("span")
     home_team = three_odd_list[0].get_text()
@@ -140,8 +144,8 @@ def get_odd_info():
 
 
 if __name__ == '__main__':
-    #match_list_html()
-    get_odd_info()
+    match_list_html()
+    #get_odd_info()
 
 
 

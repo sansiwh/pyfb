@@ -13,12 +13,13 @@ try:
     results = cur.fetchall()
     for row in results:
         name_gid[row[1]]=row[0]
+        name_gid[row[2]] = row[0]
 except Exception as e:
     raise e
 
 #缓存球队信息
 def get_team_info_by_name(name):
-    return  name_gid[name]
+    return name_gid.get(name)
 
 def insert(sql):
     try:
@@ -55,5 +56,6 @@ if __name__ == '__main__':
     # #sql = "insert into match_info(gid,main_team_gid,custom_team_gid,league_team_gid,match_date,match_week,match_time,turn) values(4030163061145862145,375434198808264704,375434474885742592,375414018631794688,2017-08-12,星期六,4:3,1)"
     # sql = "insert into match_info(gid,main_team_gid,custom_team_gid,league_gid,match_date,match_week,match_time,turn) values(4030173254533513217,375434198808264704,375434474885742592,375414018631794688,'2017-08-12','星期六','4:3',1)"
     # insert(sql)
-    param = {'away_team_name': '斯托克城', 'home_team_name': '布莱顿', 'match_date': '2017-11-21'}
-    get_match_id_by_name(param)
+    # param = {'away_team_name': '斯托克城', 'home_team_name': '布莱顿', 'match_date': '2017-11-21'}
+    # get_match_id_by_name(param)
+    print(get_team_info_by_name("西汉姆"))
