@@ -98,15 +98,15 @@ def get_odd_info():
 
     #插入胜负赔率
     gid = get_snowflake_gid()
-    sql = "insert into three_odd_info (gid,match_gid,type,odd) values (" + str(gid) + "," + str(match_id) + ",3," + str(type_3)+")"
+    sql = "insert into three_odd_info (gid,match_gid,type,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",3," + str(type_3)+",NOW())"
     insert(sql)
 
     gid = get_snowflake_gid()
-    sql = "insert into three_odd_info (gid,match_gid,type,odd) values (" + str(gid) + "," + str(match_id) + ",1," + str(type_1) + ")"
+    sql = "insert into three_odd_info (gid,match_gid,type,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",1," + str(type_1) + ",NOW())"
     insert(sql)
 
     gid = get_snowflake_gid()
-    sql = "insert into three_odd_info (gid,match_gid,type,odd) values (" + str(gid) + "," + str(match_id) + ",0," + str(type_0) + ")"
+    sql = "insert into three_odd_info (gid,match_gid,type,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",0," + str(type_0) + ",NOW())"
     insert(sql)
 
     win_ping_divs = soup.find_all(class_="gl-Market3 gl-Market_General gl-Market_PWidth-33-3333 ")
@@ -116,7 +116,7 @@ def get_odd_info():
         gid = get_snowflake_gid()
         score = i.find(class_="gl-ParticipantCentered_Name").get_text()
         odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
-        sql = "insert into three_odd_info (gid,match_gid,type,score,odd) values (" + str(gid) + "," + str(match_id) + ",3,"+str(score)+ "," + str(odd) + ")"
+        sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",3,'"+str(score)+ "','" + str(odd) + "',NOW())"
         insert(sql)
 
     # 平局赔率
@@ -125,7 +125,7 @@ def get_odd_info():
         gid = get_snowflake_gid()
         score = i.find(class_="gl-ParticipantCentered_Name").get_text()
         odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
-        sql = "insert into three_odd_info (gid,match_gid,type,score,odd) values (" + str(gid) + "," + str(match_id) + ",1," + str(score) + "," + str(odd) + ")"
+        sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",1,'" + str(score) + "','" + str(odd) + "',NOW())"
         insert(sql)
 
     # 客胜赔率
@@ -135,7 +135,7 @@ def get_odd_info():
         gid = get_snowflake_gid()
         score = i.find(class_="gl-ParticipantCentered_Name").get_text()
         odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
-        sql = "insert into three_odd_info (gid,match_gid,type,score,odd) values (" + str(gid) + "," + str(match_id) + ",0," + str(score) + "," + str(odd) + ")"
+        sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",0,'" + str(score) + "','" + str(odd) + "',NOW())"
         insert(sql)
 
 
