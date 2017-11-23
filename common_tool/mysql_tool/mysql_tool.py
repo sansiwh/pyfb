@@ -7,6 +7,7 @@ cur = get_db_cur()
 sql = "select * from team_info"
 print("查询")
 
+#snowflake_start_server --port=30001
 snowflake.client.setup("localhost", 30001)
 try:
     cur.execute(sql)
@@ -22,6 +23,14 @@ def get_team_info_by_name(name):
     return name_gid.get(name)
 
 def insert(sql):
+    try:
+        cur.execute(sql)
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise e
+
+def update(sql):
     try:
         cur.execute(sql)
         db.commit()
