@@ -10,7 +10,7 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 from common_tool.mysql_tool.mysql_tool import *
 
-browser = webdriver.PhantomJS()
+browser = webdriver.Chrome()
 browser.get("https://soccer.hupu.com/schedule/England.html")
 soup = BeautifulSoup(browser.page_source, "html.parser")
 text = soup.find(text="vs")

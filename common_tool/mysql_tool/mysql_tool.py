@@ -3,8 +3,10 @@ from common_tool.mysql_tool.data_source import *
 import snowflake.client
 
 name_gid = {}
+league_gid = {}
 cur = get_db_cur()
 sql = "select * from team_info"
+sql_league = "select * from league_info"
 print("查询")
 
 #snowflake_start_server --port=30001
@@ -13,14 +15,44 @@ try:
     cur.execute(sql)
     results = cur.fetchall()
     for row in results:
-        name_gid[row[1]]=row[0]
+        name_gid[row[1]] = row[0]
         name_gid[row[2]] = row[0]
+        name_gid[row[3]] = row[0]
+
+    cur.execute(sql_league)
+    result_league = cur.fetchall()
+    for row in result_league:
+        league_gid[row[5]] = row[0]
 except Exception as e:
     raise e
 
 #缓存球队信息
 def get_team_info_by_name(name):
-    return name_gid.get(name)
+    if name_gid.get(name) is None:
+        gid = get_snowflake_gid()
+        sql = "insert into team_info (gid,team_name) values ("+str(gid)+",'"+name+"')"
+        insert(sql)
+        name_gid[name] = gid
+        return gid
+    else:
+        return name_gid.get(name)
+
+def get_league_info_by_name(name):
+    if league_gid.get(name) is None:
+        gid = get_snowflake_gid()
+        sql = "insert into league_info (gid,league_s_name) values (" + str(gid) + ",'" + name + "')"
+        insert(sql)
+        league_gid[name] = gid
+        return gid
+    else:
+        return league_gid.get(name)
+
+#获取当前轮数
+def get_current_turn():
+    sql = "select `value` from common_config where `key` = 'premier_turn'"
+    cur.execute(sql)
+    results = cur.fetchall()
+    return(results[0][0])
 
 def insert(sql):
     try:
@@ -37,6 +69,12 @@ def update(sql):
     except Exception as e:
         db.rollback()
         raise e
+
+def query(sql):
+    cur.execute(sql)
+    db.commit()
+    results = cur.fetchall()
+    return (results)
 
 #根据主客队时间查询match_id
 #{'away_team_name': '斯托克城', 'home_team_name': '布莱顿', 'match_date': '2017-11-21'}
@@ -67,4 +105,5 @@ if __name__ == '__main__':
     # insert(sql)
     # param = {'away_team_name': '斯托克城', 'home_team_name': '布莱顿', 'match_date': '2017-11-21'}
     # get_match_id_by_name(param)
-    print(get_team_info_by_name("西汉姆"))
+    #print(get_team_info_by_name("西汉姆"))
+    print(get_team_info_by_name("C. Palace"))
