@@ -36,20 +36,26 @@ def insert_nearly_six(dic):
     custom_team_gid = get_team_info_by_name(away)
     match_date = date_format(dic["date"])
     score = dic["result"]
+    home_gid = dic["home_gid"]
+    away_gid = dic["away_gid"]
     wol = dic["wol"]
+
     if wol=="w":
         wol_str = "3"
     elif wol == "l":
         wol_str = "0"
-    else:
+    elif wol == "d":
         wol_str = "1"
+    else:
+        wol_str = "4"
 
     turn = dic["turn"]
     gid = get_snowflake_gid()
 
     sql = "insert into nearly_six_record (gid,league_gid,match_date,turn,score,main_team_gid,custom_team_gid," \
-          "if_win,create_time) values ("+str(gid)+","+str(league_gid_str)+",'"+str(match_date)+"',"\
-          +str(turn)+",'"+str(score)+"','"+str(main_team_gid)+"','"+str(custom_team_gid)+"','"+str(wol_str)+"',NOW())"
+          "if_win,create_time,home_gid,away_gid) values ("+str(gid)+","+str(league_gid_str)+",'"+str(match_date)+"',"\
+          +str(turn)+",'"+str(score)+"','"+str(main_team_gid)+"','"+str(custom_team_gid)+"','"+str(wol_str)+"',NOW(),"\
+          +str(home_gid)+","+str(away_gid)+")"
     insert(sql)
 
 #删除多个空格，保留一个

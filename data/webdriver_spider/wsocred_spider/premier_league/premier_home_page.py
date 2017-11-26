@@ -106,6 +106,8 @@ def get_head_to_head_json(html):
                 home_six_record_obj["wol"] = home_six_record[i].find(class_=" box w").get_text()
 
             home_six_record_obj["turn"] = turn
+            home_six_record_obj["home_gid"] = home_team_gid
+            home_six_record_obj["away_gid"] = away_team_gid
             insert_nearly_six(home_six_record_obj)
 
         # 获取近6场战绩 客队
@@ -140,6 +142,8 @@ def get_head_to_head_json(html):
                 away_six_record_obj["wol"] = away_six_record[i].find(class_=" box w").get_text()
 
             away_six_record_obj["turn"] = turn
+            away_six_record_obj["home_gid"] = home_team_gid
+            away_six_record_obj["away_gid"] = away_team_gid
             insert_nearly_six(away_six_record_obj)
     return "插入完成"
 

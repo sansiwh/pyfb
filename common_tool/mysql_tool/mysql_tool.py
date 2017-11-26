@@ -18,6 +18,7 @@ try:
         name_gid[row[1]] = row[0]
         name_gid[row[2]] = row[0]
         name_gid[row[3]] = row[0]
+        name_gid[row[4]] = row[0]
 
     cur.execute(sql_league)
     result_league = cur.fetchall()
