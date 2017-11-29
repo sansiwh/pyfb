@@ -6,113 +6,53 @@
 # @Date  : 2017/11/16
 from selenium import webdriver
 from bs4 import BeautifulSoup
+import datetime
 
-# browser = webdriver.Chrome()
-# browser.get('https://www.whoscored.com/Matches/1190320/Show/England-Premier-League-2017-2018-Arsenal-Tottenham')
-#
-# html = browser.page_source
-# browser.close()
-# print(html)
+import datetime
+import time
 
-head_to_head={}
-#获取球队11
-soup = BeautifulSoup(open("mainpage.html"), "html.parser")
-team_list = soup.find(class_="match-header").find_all("a")
-head_to_head["home_team"] = team_list[0].get_text()
-head_to_head["away_team"] = team_list[1].get_text()
+# twitter's snowflake parameters
+twepoch = 1288834974657
+datacenter_id_bits = 5
+worker_id_bits = 5
+sequence_id_bits = 12
+max_datacenter_id = 1 << datacenter_id_bits
+max_worker_id = 1 << worker_id_bits
+max_sequence_id = 1 << sequence_id_bits
+max_timestamp = 1 << (64 - datacenter_id_bits - worker_id_bits - sequence_id_bits)
 
-#获取交手记录
-fight_record = soup.find(id="previous-meetings-grid-wrapper").find_all("tr")
-figth_obj = []
-for i in range(len(fight_record)):
-    figth_match_obj={}
-    figth_match_obj["tournament"] = fight_record[i].find(class_="tournament").a.get_text()
-    figth_match_obj["date"] = fight_record[i].find(class_="date").get_text()
+def make_snowflake(timestamp_ms, datacenter_id, worker_id, sequence_id, twepoch=twepoch):
+    """generate a twitter-snowflake id, based on
+    https://github.com/twitter/snowflake/blob/master/src/main/scala/com/twitter/service/snowflake/IdWorker.scala
+    :param: timestamp_ms time since UNIX epoch in milliseconds"""
 
-    if fight_record[i].find(class_="team home winner") is None:
-        figth_match_obj["home"] = fight_record[i].find(class_="team home").a.get_text()
-    else:
-        figth_match_obj["home"] = fight_record[i].find(class_="team home winner").a.get_text()
+    sid = ((int(timestamp_ms) - twepoch) % max_timestamp) << datacenter_id_bits << worker_id_bits << sequence_id_bits
+    sid += (datacenter_id % max_datacenter_id) << worker_id_bits << sequence_id_bits
+    sid += (worker_id % max_worker_id) << sequence_id_bits
+    sid += sequence_id % max_sequence_id
 
-    figth_match_obj["result"] = fight_record[i].find(class_="result").get_text().replace("\n","").replace(" ","")
+    return sid
 
-    if fight_record[i].find(class_="team away winner") is None:
-        figth_match_obj["away"] = fight_record[i].find(class_="team away").a.get_text()
-    else:
-        figth_match_obj["away"] = fight_record[i].find(class_="team away winner").a.get_text()
+def melt(snowflake_id, twepoch=twepoch):
+    """inversely transform a snowflake id back to its parts."""
+    sequence_id = snowflake_id & (max_sequence_id - 1)
+    worker_id = (snowflake_id >> sequence_id_bits) & (max_worker_id - 1)
+    datacenter_id = (snowflake_id >> sequence_id_bits >> worker_id_bits) & (max_datacenter_id - 1)
+    timestamp_ms = snowflake_id >> sequence_id_bits >> worker_id_bits >> datacenter_id_bits
+    timestamp_ms += twepoch
+    return (timestamp_ms, int(datacenter_id), int(worker_id), int(sequence_id))
 
-    figth_obj.append(figth_match_obj)
+def local_datetime(timestamp_ms):
+    """convert millisecond timestamp to local datetime object."""
+    return datetime.datetime.fromtimestamp(timestamp_ms / 1000.)
 
-head_to_head["fight_record"] = figth_obj
+def get_gid():
+    t0 = int(time.time() * 1000)
+    return make_snowflake(t0, 0, 0, 0)
 
-#获取近6场战绩 主队
-home_six_record = soup.find(id="team-fixtures-content-home-matches").find_all("tr")
-home_six_record_list = []
-for i in range(len(home_six_record)):
-    home_six_record_obj = {}
-    home_six_record_obj["tournament"]=home_six_record[i].find(class_="tournament-link").get_text()
-
-    if home_six_record[i].find(class_="team home") is None:
-        home_six_record_obj["home"] = home_six_record[i].find(class_="team home winner").a.get_text()
-    else:
-        home_six_record_obj["home"] = home_six_record[i].find(class_="team home").a.get_text()
-
-    home_six_record_obj["result"] = home_six_record[i].find(class_="result").a.get_text().replace("\n","").replace(" ","")
-    home_six_record_obj["date"] = home_six_record[i].find(class_="date ta-right").get_text()
-
-    if home_six_record[i].find(class_="team away") is None:
-        home_six_record_obj["away"] = home_six_record[i].find(class_="team away winner").a.get_text()
-    else:
-        home_six_record_obj["away"] = home_six_record[i].find(class_="team away").a.get_text()
-
-    if home_six_record[i].find(class_=" box w") is None:
-        if home_six_record[i].find(class_=" box d") is None:
-            if home_six_record[i].find(class_=" box l") is None:
-                home_six_record_obj["wol"] = "u"
-            else:
-                home_six_record_obj["wol"] = home_six_record[i].find(class_=" box l").get_text()
-        else:
-            home_six_record_obj["wol"] = home_six_record[i].find(class_=" box d").get_text()
-    else:
-        home_six_record_obj["wol"] = home_six_record[i].find(class_=" box w").get_text()
-
-    home_six_record_list.append(home_six_record_obj)
-
-head_to_head["home_six"]=home_six_record_list
-
-#获取近6场战绩 客队
-away_six_record = soup.find(id="team-fixtures-content-away-matches").find_all("tr")
-away_six_record_list = []
-for i in range(len(away_six_record)):
-    away_six_record_obj={}
-    away_six_record_obj["tournament"] = away_six_record[i].find(class_="tournament-link").get_text()
-
-
-    if away_six_record[i].find(class_="team home") is None:
-        away_six_record_obj["home"] = away_six_record[i].find(class_="team home winner").a.get_text()
-    else:
-        away_six_record_obj["home"] = away_six_record[i].find(class_="team home").a.get_text()
-
-    away_six_record_obj["result"] = away_six_record[i].find(class_="result").a.get_text().replace("\n", "").replace(" ","")
-    away_six_record_obj["date"] = away_six_record[i].find(class_="date ta-left").get_text()
-
-    if away_six_record[i].find(class_="team away") is None:
-        away_six_record_obj["away"] = away_six_record[i].find(class_="team away winner").a.get_text()
-    else:
-        away_six_record_obj["away"] = away_six_record[i].find(class_="team away").a.get_text()
-
-    if away_six_record[i].find(class_=" box w") is None:
-        if away_six_record[i].find(class_=" box d") is None:
-            if away_six_record[i].find(class_=" box l") is None:
-                away_six_record_obj["wol"] = "u"
-            else:
-                away_six_record_obj["wol"] = away_six_record[i].find(class_=" box l").get_text()
-        else:
-            away_six_record_obj["wol"] = away_six_record[i].find(class_=" box d").get_text()
-    else:
-        away_six_record_obj["wol"] = away_six_record[i].find(class_=" box w").get_text()
-    away_six_record_list.append(away_six_record_obj)
-
-head_to_head["away_six"]=away_six_record_list
-
-print(head_to_head)
+if __name__ == '__main__':
+    print(get_gid())
+    # import time
+    # t0 = int(time.time() * 1000)
+    # print(make_snowflake(t0, 0, 0, 0))
+    # print(melt(make_snowflake(t0, 0, 0, 0))[0])
