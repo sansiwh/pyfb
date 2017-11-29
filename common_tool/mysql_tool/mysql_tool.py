@@ -1,6 +1,7 @@
 import pymysql
 from common_tool.mysql_tool.data_source import *
-import snowflake.client
+#import snowflake.client
+from common_tool.mysql_tool.snowflake_single import *
 
 name_gid = {}
 league_gid = {}
@@ -10,7 +11,7 @@ sql_league = "select * from league_info"
 print("查询")
 
 #snowflake_start_server --port=30001
-snowflake.client.setup("localhost", 30001)
+#snowflake.client.setup("localhost", 30001)
 try:
     cur.execute(sql)
     results = cur.fetchall()
@@ -94,7 +95,8 @@ def close_db():
     db.close()
 
 def get_snowflake_gid():
-    return snowflake.client.get_guid()
+    #return snowflake.client.get_guid()
+    return get_gid()
 
 if __name__ == '__main__':
     # print(get_team_info_by_name("莱斯特城"))
