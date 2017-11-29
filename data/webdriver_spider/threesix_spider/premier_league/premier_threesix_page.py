@@ -87,7 +87,13 @@ def get_odd_info(html):
 
     #根据主客队时间查询match_id
     year = datetime.datetime.now().strftime('%Y')
-    match_date = match_date.split("日")[0].replace("月", "-")
+    month = match_date.split("月")[0]
+    day_str = match_date.split("月")[1].split("日")[0]
+    if len(day_str) == 2:
+        day = day_str
+    else:
+        day = "0" + day_str
+    match_date = month + "-" + day
     date = year + "-" + match_date
     param = {}
     param["home_team_name"] = home_team
