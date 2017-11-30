@@ -1,21 +1,33 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @File  : premier_home_page.py
+# @File  : home_page_linux.py
 # @Author: sansi
 # Python版本：3.6.5 
+# @Date  : 2017/11/30
+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @File  : premier_home_page.py
+# @Author: sansi
+# Python版本：3.6.5
 # @Date  : 2017/11/16
 
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from data.webdriver_spider.wsocred_spider.premier_league.premier_data_mysql import *
 import time
+from pyvirtualdisplay import Display
 
 def getPageInfo(url):
-    browser = webdriver.Firefox()
+    display = Display(visible=0, size=(800, 600))
+    display.start()
+
+    browser = webdriver.Chrome()
     browser.get(url)
 
     html = browser.page_source
     browser.close()
+    display.stop()
     return html
 
 #获取已有priview比赛的列表111
