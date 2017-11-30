@@ -89,6 +89,7 @@ def get_match_id_by_name(param):
     sql = "select gid from match_info where match_date = '"+str(match_date)+"' and main_team_gid="+str(home_gid)+" and custom_team_gid="+str(away_gid)
     cur.execute(sql)
     results = cur.fetchall()
+    print(results)
     return results[0][0]
 
 def close_db():

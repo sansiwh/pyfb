@@ -14,7 +14,7 @@ import datetime
 from common_tool.mysql_tool.mysql_tool import *
 import traceback
 
-browser = webdriver.Chrome()
+browser = webdriver.Firefox()
 #进入列表页
 def match_list_html():
     # headers = {
