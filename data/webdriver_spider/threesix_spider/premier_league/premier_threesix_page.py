@@ -27,16 +27,33 @@ def match_list_html():
     # chromeOptions.add_argument('--proxy-server=http://147.75.208.57:20000')
     #
     # browser = webdriver.Chrome(chrome_options=chromeOptions)
+    browser.add_cookie({'value': 'aaat=am=0&at=00000000-0000-0000-0000-000000000000&ts=28-11-2017 14:16:22&v=2; bs=bt=1&mo=0&fs=0||&; session=processform=0&id=%7B3B611A50%2DD63A%2D4864%2D94E0%2DACD75B67DBAB%7D&fms=1; pstk=84029C1ABAA34803A513F17EB20CB0A4000003; usdi=uqid=A24F4DF6%2D7AF4%2D4EB6%2D8F79%2D4A9FB0F1C8FB; aps03=tzi=27&oty=2&bst=1&hd=Y&lng=10&cf=E&ct=42&cst=114&v=1&cg=0&ltwo=False&ao=1; rmbs=3'})
 
-    browser.get('https://www.bet365.com/')
+    browser.add_cookie({
+        #'domain': '.xxxx.com',  # 此处xxx.com前，需要带点
+        #'name': cookie['name'],
+        #'value': cookie['value']
+        #'path': '/',
+        #'expires': None
+    })
+
+
+
+
+
+
+    browser.get('https://www.bet365.com/#/AC/B1/C1/D14/E33577329/F2/R1/')
     try:
         #点击简体中文
-        browser.find_element_by_css_selector("a[class=\"lpdgl\"]").click()
+        #browser.find_element_by_css_selector("a[class=\"lpdgl\"]").click()
+        element = browser.find_elements_by_tag_name("li")[8]
+        element.find_element_by_tag_name('a').click()
 
         #点击足球
         time.sleep(15)
 
-        browser.find_element_by_css_selector("div.wn-FavouritesContainer  ~ div").click()
+        #browser.find_element_by_css_selector("div.wn-FavouritesContainer  ~ div").click()
+        browser.find_elements_by_class_name("wn-Classification ")[2].click()
 
         #点击英超联赛
         time.sleep(10)

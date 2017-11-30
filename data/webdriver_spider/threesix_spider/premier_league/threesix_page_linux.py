@@ -34,12 +34,18 @@ def match_list_html():
     browser.get('https://www.bet365.com/')
     try:
         #点击简体中文
-        browser.find_element_by_css_selector("a[class=\"lpdgl\"]").click()
+        #browser.find_element_by_css_selector("a[class=\"lpdgl\"]").click()
+        print(browser.page_source)
+        element = browser.find_elements_by_tag_name("li")[8]
+        time.sleep(5)
+        element.find_element_by_tag_name('a').click()
 
         #点击足球
         time.sleep(15)
 
-        browser.find_element_by_css_selector("div.wn-FavouritesContainer  ~ div").click()
+        print(browser.page_source)
+        #browser.find_element_by_css_selector("div.wn-FavouritesContainer  ~ div").click()
+        browser.find_elements_by_class_name("wn-Classification ")[2].click()
 
         #点击英超联赛
         time.sleep(10)

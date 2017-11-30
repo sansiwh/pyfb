@@ -22,7 +22,7 @@ def getPageInfo(url):
     display = Display(visible=0, size=(800, 600))
     display.start()
 
-    browser = webdriver.Chrome()
+    browser = webdriver.Firefox()
     browser.get(url)
 
     html = browser.page_source
@@ -159,14 +159,14 @@ def get_head_to_head_json(html):
             insert_nearly_six(away_six_record_obj)
     return "插入完成"
 
-if __name__ == '__main__':
-    # 1 主页
-    html = getPageInfo("https://www.whoscored.com/Regions/252/Tournaments/2/England-Premier-League")
-    # 2 比赛列表
-    preview_list = soup_data(html)
-    #比赛headtohead页面
-    for i in preview_list:
-        html_detail = getPageInfo('https://www.whoscored.com'+i)
-        json_result = get_head_to_head_json(html_detail)
-        print(json_result)
-        time.sleep(10)
+#if __name__ == '__main__':
+# 1 主页
+html = getPageInfo("https://www.whoscored.com/Regions/252/Tournaments/2/England-Premier-League")
+# 2 比赛列表
+preview_list = soup_data(html)
+#比赛headtohead页面
+for i in preview_list:
+    html_detail = getPageInfo('https://www.whoscored.com'+i)
+    json_result = get_head_to_head_json(html_detail)
+    print(json_result)
+    time.sleep(10)
