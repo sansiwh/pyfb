@@ -5,4 +5,4 @@
 # Python版本：3.6.5 
 # @Date  : 2017/11/30
 
-import data.webdriver_spider.threesix_spider.premier_league.premier_threesix_page
+import data.webdriver_spider.threesix_spider.premier_league.threesix_page_linux

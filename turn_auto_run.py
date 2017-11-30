@@ -5,4 +5,4 @@
 # Python版本：3.6.5 
 # @Date  : 2017/11/30
 
-import data.webdriver_spider.match_list_spider.premier_league.premier_update_socre
+import data.webdriver_spider.match_list_spider.premier_league.update_score_linux

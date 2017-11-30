@@ -5,4 +5,4 @@
 # Python版本：3.6.5 
 # @Date  : 2017/11/30
 
-import data.webdriver_spider.wsocred_spider.premier_league.premier_home_page
+import data.webdriver_spider.wsocred_spider.premier_league.home_page_linux
