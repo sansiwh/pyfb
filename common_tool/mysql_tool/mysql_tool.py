@@ -83,10 +83,12 @@ def query(sql):
 #{'away_team_name': '斯托克城', 'home_team_name': '布莱顿', 'match_date': '2017-11-21'}
 def get_match_id_by_name(param):
     sql = ""
-    results = ""
     try:
         home_team_name = param["home_team_name"]
         away_team_name = param["away_team_name"]
+
+        print(home_team_name + "  " + away_team_name)
+
         match_date = param["match_date"]
         home_gid = get_team_info_by_name(home_team_name)
         away_gid = get_team_info_by_name(away_team_name)
@@ -123,7 +125,13 @@ if __name__ == '__main__':
     # get_match_id_by_name(param)
     #print(get_team_info_by_name("西汉姆"))
     #print(get_team_info_by_name("C. Palace"))
-    sql = "select gid from match_info where match_date ='2017-12-02' and main_team_gid=375434198808264704 and custom_team_gid=375413722736230400"
-    cur.execute(sql)
-    results = cur.fetchall()
-    print(len(results))
+    # sql = "select gid from match_info where match_date ='2017-12-02' and main_team_gid=375434198808264704 and custom_team_gid=375413722736230400"
+    # cur.execute(sql)
+    # results = cur.fetchall()
+    # print(len(results))
+    match_id = 444555566732456
+    gid = 4545456456456456
+    score = '2-1'
+    odd = '31.5'
+    sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",3,'" + score + "','" + odd + "',NOW())"
+    print(sql)

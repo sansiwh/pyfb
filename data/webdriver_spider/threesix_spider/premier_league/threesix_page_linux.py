@@ -38,15 +38,15 @@ def match_list_html():
         time.sleep(5)
         browser.find_element_by_css_selector("a[class=\"lpdgl\"]").click()
 
-
-
         #点击足球
+        print("点击足球")
         time.sleep(15)
 
         #browser.find_element_by_css_selector("div.wn-FavouritesContainer  ~ div").click()
         browser.find_elements_by_class_name("wn-Classification ")[2].click()
 
         #点击英超联赛
+        print("点击英超联赛")
         time.sleep(10)
         element = browser.find_elements("css selector",".sm-Market ")[3]
         element = element.find_elements("css selector",".sm-CouponLink_Label ")[0]
@@ -54,6 +54,7 @@ def match_list_html():
         time.sleep(10)
 
         # 英超列表首页
+        print("首页准备抓取")
         elements = browser.find_elements_by_css_selector('.sl-CouponFixtureLinkParticipant ')
         loop_data(elements,0)
 
@@ -110,52 +111,52 @@ def get_odd_info(html):
     param["away_team_name"] = away_team
     param["match_date"] = date
     match_id = get_match_id_by_name(param)
+    if match_id != 0:
+        type_3 = three_odd_list[1].get_text()
+        type_1 = three_odd_list[3].get_text()
+        type_0 = three_odd_list[5].get_text()
 
-    type_3 = three_odd_list[1].get_text()
-    type_1 = three_odd_list[3].get_text()
-    type_0 = three_odd_list[5].get_text()
-
-    #插入胜负赔率
-    gid = get_snowflake_gid()
-    sql = "insert into three_odd_info (gid,match_gid,type,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",3," + str(type_3)+",NOW())"
-    insert(sql)
-
-    gid = get_snowflake_gid()
-    sql = "insert into three_odd_info (gid,match_gid,type,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",1," + str(type_1) + ",NOW())"
-    insert(sql)
-
-    gid = get_snowflake_gid()
-    sql = "insert into three_odd_info (gid,match_gid,type,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",0," + str(type_0) + ",NOW())"
-    insert(sql)
-
-    win_ping_divs = soup.find_all(class_="gl-Market3 gl-Market_General gl-Market_PWidth-33-3333 ")
-    #主胜赔率
-    socre_odd_win = win_ping_divs[0].find_all(class_="gl-ParticipantCentered gl-Participant_General gl-ParticipantCentered_NoHandicap ")
-    for i in socre_odd_win:
+        #插入胜负赔率
         gid = get_snowflake_gid()
-        score = i.find(class_="gl-ParticipantCentered_Name").get_text()
-        odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
-        sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",3,'"+str(score)+ "','" + str(odd) + "',NOW())"
+        sql = "insert into three_odd_info (gid,match_gid,type,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",3," + str(type_3)+",NOW())"
         insert(sql)
 
-    # 平局赔率
-    socre_odd_ping = win_ping_divs[1].find_all(class_="gl-ParticipantCentered gl-Participant_General gl-ParticipantCentered_NoHandicap ")
-    for i in socre_odd_ping:
         gid = get_snowflake_gid()
-        score = i.find(class_="gl-ParticipantCentered_Name").get_text()
-        odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
-        sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",1,'" + str(score) + "','" + str(odd) + "',NOW())"
+        sql = "insert into three_odd_info (gid,match_gid,type,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",1," + str(type_1) + ",NOW())"
         insert(sql)
 
-    # 客胜赔率
-    lose_divs = soup.find(class_="gl-Market3 gl-Market_General gl-Market_PWidth-33-3333 gl-Market_LastInRow ")
-    socre_odd_lose = lose_divs.find_all(class_="gl-ParticipantCentered gl-Participant_General gl-ParticipantCentered_NoHandicap ")
-    for i in socre_odd_lose:
         gid = get_snowflake_gid()
-        score = i.find(class_="gl-ParticipantCentered_Name").get_text()
-        odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
-        sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",0,'" + str(score) + "','" + str(odd) + "',NOW())"
+        sql = "insert into three_odd_info (gid,match_gid,type,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",0," + str(type_0) + ",NOW())"
         insert(sql)
+
+        win_ping_divs = soup.find_all(class_="gl-Market3 gl-Market_General gl-Market_PWidth-33-3333 ")
+        #主胜赔率
+        socre_odd_win = win_ping_divs[0].find_all(class_="gl-ParticipantCentered gl-Participant_General gl-ParticipantCentered_NoHandicap ")
+        for i in socre_odd_win:
+            gid = get_snowflake_gid()
+            score = i.find(class_="gl-ParticipantCentered_Name").get_text()
+            odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
+            sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",3,'"+str(score)+ "','" + str(odd) + "',NOW())"
+            insert(sql)
+
+        # 平局赔率
+        socre_odd_ping = win_ping_divs[1].find_all(class_="gl-ParticipantCentered gl-Participant_General gl-ParticipantCentered_NoHandicap ")
+        for i in socre_odd_ping:
+            gid = get_snowflake_gid()
+            score = i.find(class_="gl-ParticipantCentered_Name").get_text()
+            odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
+            sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",1,'" + str(score) + "','" + str(odd) + "',NOW())"
+            insert(sql)
+
+        # 客胜赔率
+        lose_divs = soup.find(class_="gl-Market3 gl-Market_General gl-Market_PWidth-33-3333 gl-Market_LastInRow ")
+        socre_odd_lose = lose_divs.find_all(class_="gl-ParticipantCentered gl-Participant_General gl-ParticipantCentered_NoHandicap ")
+        for i in socre_odd_lose:
+            gid = get_snowflake_gid()
+            score = i.find(class_="gl-ParticipantCentered_Name").get_text()
+            odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
+            sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",0,'" + str(score) + "','" + str(odd) + "',NOW())"
+            insert(sql)
 
 match_list_html()
 # if __name__ == '__main__':
