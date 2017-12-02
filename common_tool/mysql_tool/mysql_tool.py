@@ -2,6 +2,7 @@ import pymysql
 from common_tool.mysql_tool.data_source import *
 #import snowflake.client
 from common_tool.mysql_tool.snowflake_single import *
+from common_tool.date_tool.date_tool import *
 
 name_gid = {}
 league_gid = {}
@@ -81,16 +82,27 @@ def query(sql):
 #根据主客队时间查询match_id
 #{'away_team_name': '斯托克城', 'home_team_name': '布莱顿', 'match_date': '2017-11-21'}
 def get_match_id_by_name(param):
-    home_team_name = param["home_team_name"]
-    away_team_name = param["away_team_name"]
-    match_date = param["match_date"]
-    home_gid = get_team_info_by_name(home_team_name)
-    away_gid = get_team_info_by_name(away_team_name)
-    sql = "select gid from match_info where match_date = '"+str(match_date)+"' and main_team_gid="+str(home_gid)+" and custom_team_gid="+str(away_gid)
-    cur.execute(sql)
-    results = cur.fetchall()
-    print(results)
-    return results[0][0]
+    sql = ""
+    results = ""
+    try:
+        home_team_name = param["home_team_name"]
+        away_team_name = param["away_team_name"]
+        match_date = param["match_date"]
+        home_gid = get_team_info_by_name(home_team_name)
+        away_gid = get_team_info_by_name(away_team_name)
+        sql = "select gid from match_info where match_date = '"+str(match_date)+"' and main_team_gid="+str(home_gid)+" and custom_team_gid="+str(away_gid)
+        cur.execute(sql)
+        results = cur.fetchall()
+        if len(results) == 0:
+            next_date = str_date_add_one_day(str(match_date))
+            sql = "select gid from match_info where match_date = '" + str(next_date) + "' and main_team_gid=" + str(home_gid) + " and custom_team_gid=" + str(away_gid)
+            cur.execute(sql)
+            results = cur.fetchall()
+        return results[0][0]
+    except:
+        print(sql)
+        return 0
+
 
 def close_db():
     db.close()
@@ -110,4 +122,8 @@ if __name__ == '__main__':
     # param = {'away_team_name': '斯托克城', 'home_team_name': '布莱顿', 'match_date': '2017-11-21'}
     # get_match_id_by_name(param)
     #print(get_team_info_by_name("西汉姆"))
-    print(get_team_info_by_name("C. Palace"))
+    #print(get_team_info_by_name("C. Palace"))
+    sql = "select gid from match_info where match_date ='2017-12-02' and main_team_gid=375434198808264704 and custom_team_gid=375413722736230400"
+    cur.execute(sql)
+    results = cur.fetchall()
+    print(len(results))

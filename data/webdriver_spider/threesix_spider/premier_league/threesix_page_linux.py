@@ -34,22 +34,21 @@ def match_list_html():
     browser.get('https://www.bet365.com/')
     try:
         #点击简体中文
-        #browser.find_element_by_css_selector("a[class=\"lpdgl\"]").click()
-        print(browser.page_source)
-        element = browser.find_elements_by_tag_name("li")[8]
+        browser.find_element_by_css_selector('a[href=\"https://www.bet365.com/zh-CHS/\"').click()
         time.sleep(5)
-        element.find_element_by_tag_name('a').click()
+        browser.find_element_by_css_selector("a[class=\"lpdgl\"]").click()
+
+
 
         #点击足球
         time.sleep(15)
 
-        print(browser.page_source)
         #browser.find_element_by_css_selector("div.wn-FavouritesContainer  ~ div").click()
         browser.find_elements_by_class_name("wn-Classification ")[2].click()
 
         #点击英超联赛
         time.sleep(10)
-        element = browser.find_elements("css selector",".sm-Market ")[2]
+        element = browser.find_elements("css selector",".sm-Market ")[3]
         element = element.find_elements("css selector",".sm-CouponLink_Label ")[0]
         element.click()
         time.sleep(10)
@@ -111,7 +110,6 @@ def get_odd_info(html):
     param["away_team_name"] = away_team
     param["match_date"] = date
     match_id = get_match_id_by_name(param)
-    print(match_id)
 
     type_3 = three_odd_list[1].get_text()
     type_1 = three_odd_list[3].get_text()
