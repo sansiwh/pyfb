@@ -112,4 +112,4 @@ def calculate_rank_by_turn(turn):
 #抓取最新排名
 
 if __name__ == '__main__':
-    calculate_rank_by_turn(15)
+    calculate_rank_by_turn(16)

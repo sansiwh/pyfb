@@ -73,6 +73,7 @@ def update_score(turn):
 try:
     turn_str = update_turn()
     update_score(int(turn_str))
+    update_score(int(turn_str) - 1) #防止漏掉，把上一轮也更新一次
     browser.close()
 except:
     browser.close()
