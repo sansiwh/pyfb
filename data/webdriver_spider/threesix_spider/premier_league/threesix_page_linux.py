@@ -158,9 +158,13 @@ def get_odd_info(html):
             sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",0,'" + str(score) + "','" + str(odd) + "',NOW())"
             insert(sql)
 
-match_list_html()
-browser.close()
-display.stop()
+try:
+    match_list_html()
+    browser.close()
+    display.stop()
+except:
+    browser.close()
+    display.stop()
 # if __name__ == '__main__':
 #     match_list_html()
     #get_odd_info()

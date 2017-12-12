@@ -120,6 +120,10 @@ def get_odd_info(html):
         insert(sql)
 
 #插入胜负赔率，频繁抓取
-match_list_html()
-browser.close()
-display.stop()
+try:
+    match_list_html()
+    browser.close()
+    display.stop()
+except:
+    browser.close()
+    display.stop()
