@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# @File  : threesix_page_linux.py
+# @File  : threesix_three_linux.py
 # @Author: sansi
 # Python版本：3.6.5 
-# @Date  : 2017/11/30
+# @Date  : 2017/12/12
 
 from selenium import webdriver
 import time
@@ -20,16 +20,6 @@ display.start()
 browser = webdriver.Firefox()
 #进入列表页
 def match_list_html():
-    # headers = {
-    #     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/47.0.2526.111 Safari/537.36",
-    # }
-
-    #ip_list_port = getIpList(headers)
-    #random_ip = getRandomIp(ip_list_port)
-    # chromeOptions = webdriver.ChromeOptions()
-    # chromeOptions.add_argument('--proxy-server=http://147.75.208.57:20000')
-    #
-    # browser = webdriver.Chrome(chrome_options=chromeOptions)
 
     browser.get('https://www.bet365.com/')
     try:
@@ -62,7 +52,7 @@ def match_list_html():
         traceback.print_exc()
         print("页面异常，请检查网页是否可以正常打开")
         browser.close()
-        display.stop()
+        #display.stop()
 
 #获取每场比赛信息
 def loop_data(elements,index):
@@ -85,7 +75,7 @@ def loop_data(elements,index):
         traceback.print_exc()
         print("赔率抓取完成")
         browser.close()
-        display.stop()
+        #display.stop()
 
 #获取賠率信息并保存
 def get_odd_info(html):
@@ -129,38 +119,7 @@ def get_odd_info(html):
         sql = "insert into three_odd_info (gid,match_gid,type,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",0," + str(type_0) + ",NOW())"
         insert(sql)
 
-        win_ping_divs = soup.find_all(class_="gl-Market3 gl-Market_General gl-Market_PWidth-33-3333 ")
-        #主胜赔率
-        socre_odd_win = win_ping_divs[0].find_all(class_="gl-ParticipantCentered gl-Participant_General gl-ParticipantCentered_NoHandicap ")
-        for i in socre_odd_win:
-            gid = get_snowflake_gid()
-            score = i.find(class_="gl-ParticipantCentered_Name").get_text()
-            odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
-            sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",3,'"+str(score)+ "','" + str(odd) + "',NOW())"
-            insert(sql)
-
-        # 平局赔率
-        socre_odd_ping = win_ping_divs[1].find_all(class_="gl-ParticipantCentered gl-Participant_General gl-ParticipantCentered_NoHandicap ")
-        for i in socre_odd_ping:
-            gid = get_snowflake_gid()
-            score = i.find(class_="gl-ParticipantCentered_Name").get_text()
-            odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
-            sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",1,'" + str(score) + "','" + str(odd) + "',NOW())"
-            insert(sql)
-
-        # 客胜赔率
-        lose_divs = soup.find(class_="gl-Market3 gl-Market_General gl-Market_PWidth-33-3333 gl-Market_LastInRow ")
-        socre_odd_lose = lose_divs.find_all(class_="gl-ParticipantCentered gl-Participant_General gl-ParticipantCentered_NoHandicap ")
-        for i in socre_odd_lose:
-            gid = get_snowflake_gid()
-            score = i.find(class_="gl-ParticipantCentered_Name").get_text()
-            odd = i.find(class_="gl-ParticipantCentered_Odds").get_text()
-            sql = "insert into score_odd_info (gid,match_gid,type,score,odd,create_time) values (" + str(gid) + "," + str(match_id) + ",0,'" + str(score) + "','" + str(odd) + "',NOW())"
-            insert(sql)
-
+#插入胜负赔率，频繁抓取
 match_list_html()
 browser.close()
 display.stop()
-# if __name__ == '__main__':
-#     match_list_html()
-    #get_odd_info()

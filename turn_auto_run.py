@@ -6,3 +6,4 @@
 # @Date  : 2017/11/30
 
 import data.webdriver_spider.match_list_spider.premier_league.update_score_linux
+import data.webdriver_spider.match_list_spider.premier_league.update_rank_linux

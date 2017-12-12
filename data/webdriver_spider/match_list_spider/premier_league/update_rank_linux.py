@@ -10,6 +10,8 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 from common_tool.mysql_tool.mysql_tool import *
 
+display = Display(visible=0, size=(800,600))
+display.start()
 browser = webdriver.Firefox()
 
 def update_rank():
@@ -78,9 +80,11 @@ def update_all_rank(trs):
 
         update(sql)
 
-if __name__ == '__main__':
-    try:
-        update_rank()
-        browser.close()
-    except:
-        browser.close()
+
+try:
+    update_rank()
+    browser.close()
+    display.stop()
+except:
+    browser.close()
+    display.stop()
