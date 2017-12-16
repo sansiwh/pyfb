@@ -6,6 +6,7 @@
 # @Date  : 2017/12/05
 
 import re
+from pyvirtualdisplay import Display
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from common_tool.mysql_tool.mysql_tool import *
