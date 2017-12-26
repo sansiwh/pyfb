@@ -36,8 +36,8 @@ def update_rank():
 
     if current_turn > db_turn : #抓取轮数大于数据库最大轮数则全部添加
         insert_all_rank(trs,current_turn)
-    else:
-        update_all_rank(trs)
+    else:#轮数相等则更新
+        update_all_rank(trs,current_turn)
 
 def insert_all_rank(trs,current_turn):
     for i in trs :
@@ -61,7 +61,7 @@ def insert_all_rank(trs,current_turn):
               str(lose_goal)+","+str(point)+","+str(turn)+","+str(match_num)+")"
         insert(sql)
 
-def update_all_rank(trs):
+def update_all_rank(trs,current_turn):
     for i in trs :
         tr = BeautifulSoup(str(i), "html.parser")
         team_str = tr.find_all("td")[2].find("a").get_text()
@@ -77,7 +77,7 @@ def update_all_rank(trs):
 
         sql = "update league_rank_info set rank_num = " + str(rank_num) + ",win_num = " + str(win_num) + ",tie_num = " + str(tie_num) + ",lose_num = "+\
         str(lose_num)+",win_goal = " + str(win_goal) + ",lose_goal = " + str(lose_goal) + ",point = "+str(point) + ",match_num = " + str(match_num) +\
-              " where team_gid = " + str(team_gid)
+              " where current_turn="+str(current_turn)+" and  team_gid = " + str(team_gid)
 
         update(sql)
 
