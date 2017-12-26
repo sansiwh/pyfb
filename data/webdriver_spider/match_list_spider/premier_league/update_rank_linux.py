@@ -77,7 +77,7 @@ def update_all_rank(trs,current_turn):
 
         sql = "update league_rank_info set rank_num = " + str(rank_num) + ",win_num = " + str(win_num) + ",tie_num = " + str(tie_num) + ",lose_num = "+\
         str(lose_num)+",win_goal = " + str(win_goal) + ",lose_goal = " + str(lose_goal) + ",point = "+str(point) + ",match_num = " + str(match_num) +\
-              " where current_turn="+str(current_turn)+" and  team_gid = " + str(team_gid)
+              " where turn="+str(current_turn)+" and  team_gid = " + str(team_gid)
 
         update(sql)
 
