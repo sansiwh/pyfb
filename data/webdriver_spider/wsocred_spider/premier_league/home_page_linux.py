@@ -18,16 +18,15 @@ from data.webdriver_spider.wsocred_spider.premier_league.premier_data_mysql impo
 import time
 from pyvirtualdisplay import Display
 
+display = Display(visible=0, size=(800, 600))
+display.start()
+browser = webdriver.Firefox()
 def getPageInfo(url):
-    display = Display(visible=0, size=(800, 600))
-    display.start()
-
-    browser = webdriver.Firefox()
     browser.get(url)
 
     html = browser.page_source
-    browser.close()
-    display.stop()
+
+
     return html
 
 #获取已有priview比赛的列表111
@@ -43,7 +42,6 @@ def soup_data(html):
             print(i["href"])
         except:
             print("")
-
     return preview_list
 
 def get_head_to_head_json(html):
@@ -164,9 +162,21 @@ def get_head_to_head_json(html):
 html = getPageInfo("https://www.whoscored.com/Regions/252/Tournaments/2/England-Premier-League")
 # 2 比赛列表
 preview_list = soup_data(html)
+#首页没有要下一页
+if(len(preview_list) == 0):
+    browser.get("https://www.whoscored.com/Regions/252/Tournaments/2/England-Premier-League")
+    browser.find_element_by_css_selector("a[class=\"next button ui-state-default rc-r is-default\"]").click()
+    time.sleep(15)
+    html = browser.page_source
+    preview_list = soup_data(html)
+
 #比赛headtohead页面
 for i in preview_list:
     html_detail = getPageInfo('https://www.whoscored.com'+i)
     json_result = get_head_to_head_json(html_detail)
     print(json_result)
     time.sleep(10)
+    #print(i)
+
+browser.close()
+display.stop()
